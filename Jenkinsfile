@@ -13,6 +13,7 @@ pipeline {
     stage('Client Tests') {
     steps {
         dir('src') {
+            echo "Running Client tests"
             sh 'npm install'
             sh 'npm test'
         }
