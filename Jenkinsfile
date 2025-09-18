@@ -9,4 +9,13 @@ pipeline {
             }
         }
     }
+
+    stage('Client Tests') {
+    steps {
+        dir('src') {
+            sh 'npm install'
+            sh 'npm test'
+        }
+    }
+}
 }

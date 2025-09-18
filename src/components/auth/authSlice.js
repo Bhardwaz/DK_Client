@@ -132,6 +132,9 @@ const authSlice = createSlice({
         state.usersById[user._id] = user;
       });
     },
+    setUser: (state, action) => {
+      state.loggedinUser = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -205,7 +208,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { addUsers } = authSlice.actions;
+export const { addUsers, setUser } = authSlice.actions;
 export default authSlice.reducer;
 
 // some handy functions to avoid duplicacy
