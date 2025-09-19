@@ -18,5 +18,12 @@ pipeline {
         }
     }
 }
+     stage('Build Images') {
+    steps {
+        echo "Building docker image for client"
+        sh 'docker build -t datekarle-app:client-latest .'
+        echo "Docker image built successfully"
+    }
+}
     }
 }
