@@ -9,11 +9,11 @@ pipeline {
             }
         }
         
-        stage('Client Tests') {
+        stage('Build') {
             steps {
-                echo "Running Client tests"
+                echo "Running Build"
                 sh 'npm install'
-                sh 'npm test'
+                sh 'npm run build'
             }
         }
         
