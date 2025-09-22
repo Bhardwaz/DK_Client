@@ -2,6 +2,10 @@
 pipeline {
     agent any
 
+    environment {
+        VITE_API_URL  = credentials('VITE_API_URL')
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -20,11 +24,13 @@ pipeline {
 
         stage('Build Images') {
             steps {
-                withEnv(['VITE_API_URL=http://98.70.97.10:4001']) {
                     echo 'Building docker image for client'
-                    sh 'docker build -t datekarle-app:client-latest .'
+                    sh """
+                    docker build \
+                    --build-arg VITE_API_URL=${VITE_API_URL} \
+                    -t datekarle-app:client-latest . \\
+                    """
                     echo 'Docker image built successfully'
-                }
             }
         }
     }
