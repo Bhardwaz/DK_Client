@@ -29,6 +29,8 @@ pipeline {
                     docker build \
                     --build-arg VITE_API_URL=${VITE_API_URL} \
                     -t datekarle-app:client-latest . \\
+                    docker rm -f client-container || true
+                    docker run -d -p 3000:3000 --name client-container datekarle-app:client-container
                     """
                     echo 'Docker image built successfully'
             }
