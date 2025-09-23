@@ -47,7 +47,7 @@ pipeline {
                     echo 'Starting new container...'
                     sh """
                         docker run -d \
-                          -p 3000:3000 \
+                          -p 3000:80 \
                           --name ${CONTAINER_NAME} \
                           --restart unless-stopped \
                           ${IMAGE_NAME}-${IMAGE_TAG}
