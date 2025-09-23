@@ -6,7 +6,7 @@ export const getSocket = loggedInUserId => {
      if(!loggedInUserId) return console.log("Loggedin user id is required to connect")     
 
     if(!socket) {
-        socket = io("http://localhost:4001", {
+        socket = io(`${import.meta.env.VITE_API_URL}`, {
             autoConnect:false,
             auth: { sender : loggedInUserId }
         })
