@@ -8,13 +8,13 @@ pipeline {
         IMAGE_NAME = 'datekarle-app:client'
     }
 
-    stage('Clean Workspace') {
-        steps {
-            deleteDir()
-        }
-    }
-
     stages {
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+
         stage('Checkout') {
             steps {
                 echo 'Checking out code from repository...'
@@ -28,7 +28,7 @@ pipeline {
                 sh 'npm ci'
             }
         }
-        
+
         stage('Build Application') {
             steps {
                 echo 'Building application...'
