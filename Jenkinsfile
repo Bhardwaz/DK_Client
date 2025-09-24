@@ -7,7 +7,13 @@ pipeline {
         CONTAINER_NAME = 'client-container'
         IMAGE_NAME = 'datekarle-app:client'
     }
-    
+
+    stage('Clean Workspace') {
+        steps {
+            deleteDir()
+        }
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -15,7 +21,7 @@ pipeline {
                 checkout scm
             }
         }
-        
+
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
@@ -29,7 +35,7 @@ pipeline {
                 sh 'npm run build'
             }
         }
-        
+
         stage('Build & Deploy Docker Image') {
             steps {
                 script {
