@@ -4,6 +4,8 @@ import './index.css'
 import App from './App.jsx'
 import { store } from './components/services/store.js'
 import { Provider } from 'react-redux'
+import { registerSW } from 'virtual:pwa-register';
+registerSW();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
