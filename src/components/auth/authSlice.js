@@ -26,7 +26,7 @@ export const fetchLoggedInUser = createAsyncThunk(
       const user = res.data.user;
       return user;
     } catch (error) {
-      return rejectWithValue(error.message || "Network Error");
+      return rejectWithValue(error || "Network Error");
     }
   }
 );
@@ -43,7 +43,7 @@ export const signinUser = createAsyncThunk(
       const res = await toast.promise(promise, {
         loading: "Letting you in",
         success: "Welcome back!",
-        error: "Check your credentials",
+        error: "Check your credentials or network",
       });
 
       if (!res.status === 200) {
@@ -86,6 +86,7 @@ export const signupUser = createAsyncThunk(
 
       return await res.json();
     } catch (error) {
+      toast.error(error.message)
       return rejectWithValue(error.message || "Network Error");
     }
   }

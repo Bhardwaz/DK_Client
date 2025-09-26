@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import axiosInstance from "../../../utils/axiosInstance";
 import { createSelector } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 export const fetchChats = createAsyncThunk(
   "chats",
@@ -9,7 +10,7 @@ export const fetchChats = createAsyncThunk(
       const response = await axiosInstance.get("/chats");
       return response?.data;
     } catch (error) {
-      console.error("Error fetching chats:", error);
+      toast.error(error.message)
       return rejectWithValue(error.message, "Cannot fetch chats");
     }
   }
@@ -23,7 +24,6 @@ export const fetchConnectionsWithoutChat = createAsyncThunk(
 
       return res?.data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error);
     }
   }
@@ -31,11 +31,14 @@ export const fetchConnectionsWithoutChat = createAsyncThunk(
 
 export const fetchMessages = createAsyncThunk(
   "/messages",
-  async (chatId, { rejectWithValue }) => {
+  async ({ chatId, batch, limit }, { rejectWithValue }) => {
     try {
-      const res = await axiosInstance.get(`/messages/${chatId}`);
+      const res = await axiosInstance.get(`/messages/${chatId}`, {
+        params: { batch, limit }
+      });
       return res.data;
     } catch (error) {
+      toast.error(error.message)
       return rejectWithValue(error.message, "failed in fetching messages");
     }
   }
@@ -153,9 +156,17 @@ const chatSlice = createSlice({
       })
       .addCase(fetchMessages.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const chatId = action.payload[0].chat;
-        const messages = action.payload;
-        state.messages.byId[chatId] = messages;
+        const chatId = action.payload.messages[0].chat;
+        const { hasMore } = action.payload
+        const { batchNum } = action.payload
+        const newMessages  = action.payload.messages;
+        if(batchNum === 1) state.messages.byId[chatId] = { messages: newMessages, hasMore, batchNum};
+        if(batchNum > 1) {
+          const existing = current(state.messages.byId[chatId].messages) || []
+          state.messages.byId[chatId].messages = [...newMessages, ...existing]
+          state.messages.byId[chatId].hasMore = hasMore
+          state.messages.byId[chatId].batchNum = batchNum
+        }
         state.initialized = true;
       })
 

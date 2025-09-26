@@ -9,4 +9,18 @@ const axiosInstance = axios.create({
   },
 });
 
+axiosInstance.interceptors.response.use(response => response, error => {
+  const structuredError = {
+    status: error.response?.status || 0,
+    message:
+        error.response?.data?.message ||
+        (error.request
+          ? "Network error. Please check your connection."
+          : error.message),
+      details: error.response?.data || null,
+      timestamp: new Date().toISOString(),
+  }
+   return Promise.reject(structuredError);
+})
+
 export default axiosInstance;

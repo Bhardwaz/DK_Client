@@ -10,8 +10,8 @@ export const fetchRequests = createAsyncThunk(
       const data = requests?.data?.data;
       return data;
     } catch (error) {
-      console.log(error);
-      rejectWithValue("Error in fetching requests");
+      toast.error(error.message)
+      rejectWithValue(error);
     }
   }
 );
@@ -32,7 +32,7 @@ export const pushActionsThunk = createAsyncThunk(
 
       return res.data;
     } catch (error) {
-      console.error(error);
+      toast.error(error.message)
       return rejectWithValue(error.response?.data || error.message);
     }
   }

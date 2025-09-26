@@ -10,7 +10,8 @@ export const fetchUploadUrl = async (fileType) => {
 
     return res.data;
   } catch (error) {
-    console.log(error);
+    toast.error(error.message)
+    throw new Error(error)
   }
 };
 
@@ -30,7 +31,7 @@ export const deletePhoto = createAsyncThunk(
 
       return res.data;
     } catch (error) {
-      console.log(error);
+      toast.error(error.message)
       rejectWithValue(error.message || "Failed in deleting");
     }
   }
@@ -48,6 +49,7 @@ export const fetchProfile = createAsyncThunk(
       });
       return res.data;
     } catch (error) {
+      toast.error(error.message)
       return rejectWithValue(error.response?.data || error.message);
     }
   }
@@ -65,6 +67,7 @@ export const editProfile = createAsyncThunk(
       });
       return res.data;
     } catch (error) {
+      toast.error(error.message)
       return rejectWithValue(error.response?.data || error.message);
     }
   }

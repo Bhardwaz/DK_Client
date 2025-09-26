@@ -20,7 +20,6 @@ const SuggestedChat = () => {
 
   return (
     <div className="my-6">
-      {/* Heading */}
       {connectionsWithoutChat?.length > 0 ? (
         <div className="flex items-center justify-center mb-4">
           <hr className="flex-grow border-t border-gray-300 sm:max-w-xs" />

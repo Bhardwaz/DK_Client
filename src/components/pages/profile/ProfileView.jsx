@@ -45,16 +45,3 @@ export default function ProfileView() {
   );
 }
 
-
-// AWS access portal URL: https://d-9f67650640.awsapps.com/start,
-// Username: date_karle,
-// One-time password: wkwnF32v#0ra5ZravEA<A&mex?pc$VbpBBw&xeZSYE1)xk%/EdtidXrs<h8
-
-// Frontend (React)
-//         ⬇
-// Backend API (Node/Express)
-//         ⬇
-// AWS S3 (for storage) + CloudFront (CDN)
-//         ⬆
-// Database (Mongo)
-

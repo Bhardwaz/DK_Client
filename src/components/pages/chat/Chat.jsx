@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { MoreVertical, ArrowLeft, Send } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { MoreVertical, ArrowLeft, Send, ArrowDown } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../auth/authSlice";
-import { getRelativeTime } from "../../../utils/utilityfn";
+import { getRelativeTime, useLocalStorage } from "../../../utils/utilityfn";
 import {
   fetchMessages,
   pushMessage,
@@ -26,41 +26,35 @@ const Chat = () => {
   const messages = useSelector(selectAllMessages);
   const chats = useSelector(selectChats);
   const connectionWithOutChat = useSelector(selectConnectionsWithoutChat);
-  const isOnline = useSelector(selectOnline)
+  const isOnline = useSelector(selectOnline);
+  const [loadMessages, setLoadMessages] = useState({
+    batch: 1,
+    limit: 20,
+  });
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
-  useMemo(() => {
-    let user;
-    if (status === "active") {
-      user = chats?.find(
-        (chat) => chat?.otherUser._id === targetUserId
-      )?.otherUser;
-    } else {
-      user = connectionWithOutChat?.find(
-        (conn) => conn?.user?._id === targetUserId
-      )?.user;
-    }
-    if (user) {
-      localStorage.setItem("targetUserInfo", JSON.stringify(user));
-    }
-    return user;
-  }, [chats, targetUserId, connectionWithOutChat, status]);
-
+  useLocalStorage(status, chats, connectionWithOutChat, targetUserId)
   const storedUser = useMemo(
     () => JSON.parse(localStorage.getItem("targetUserInfo") || "null"),
     []
   );
-
   useEffect(() => {
     if (status !== "lazy") {
-      dispatch(fetchMessages(chatId));
+      dispatch(
+        fetchMessages({
+          chatId,
+          batch: loadMessages.batch,
+          limit: loadMessages.limit,
+        })
+      );
     }
   }, [dispatch, chatId, status]);
 
   useEffect(() => {
-    if (endOfMessagesRef.current) {
+    if (endOfMessagesRef.current && messages?.byId?.[chatId]?.batchNum === 1) {
       endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [messages, chatId]);
 
   useEffect(() => {
     read(chatId, _id);
@@ -78,7 +72,7 @@ const Chat = () => {
 
     const message = {
       tempId,
-      photoUrl : mainPhoto,
+      photoUrl: mainPhoto,
       firstName,
       lastName,
       from: "me",
@@ -96,9 +90,18 @@ const Chat = () => {
     sendMessage(message);
   };
 
+  const loadNextBatch = () => {
+    setLoadMessages((prev) => {
+      const nextBatch = prev.batch + 1;
+      dispatch(fetchMessages({ chatId, batch: nextBatch, limit: prev.limit }));
+      return { ...prev, batch: nextBatch };
+    });
+    setShowScrollButton(true)
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-base-100">
-      {/* Header */}
+    <div
+      className="flex flex-col h-screen bg-base-100 overflow-y: auto"    >
       <div className="bg-base-200 shadow-md sticky top-0 z-10">
         <div className="flex items-center justify-between p-3 max-w-2xl mx-auto w-full">
           <button
@@ -131,20 +134,20 @@ const Chat = () => {
               className="menu dropdown-content bg-base-200 rounded-box shadow-md mt-3 w-48"
             >
               <li>
-                <a>View Profile</a>
+                <Link>View Profile</Link>
               </li>
               <li>
-                <a>Mute Notifications</a>
+                <button>Mute Notifications</button>
               </li>
               <li>
-                <a>Clear Chat</a>
+                <button>Clear Chat</button>
               </li>
             </ul>
           </div>
         </div>
       </div>
 
-      {!messages?.byId?.[chatId] ? (
+      {!messages?.byId?.[chatId]?.messages ? (
         <div className="flex h-full mt-32 w-full items-center justify-center">
           <p className="text-black text-lg font-semibold">
             💌 No chat yet, start a new one!
@@ -152,9 +155,16 @@ const Chat = () => {
         </div>
       ) : null}
 
-      {/* Messages */}
       <div className="flex-1 px-3 py-2 max-w-2xl w-full mx-auto">
-        {messages?.byId?.[chatId]?.map((msg, idx) => (
+        {messages?.byId?.[chatId]?.messages?.length > 0 &&
+          messages?.byId?.[chatId]?.hasMore && (
+            <div className="flex justify-center mb-2">
+              <button onClick={loadNextBatch} className="btn btn-sm px-3 py-5">
+                Load More Messages
+              </button>
+            </div>
+          )}
+        {messages?.byId?.[chatId]?.messages?.map((msg, idx) => (
           <div
             key={idx}
             className={`chat ${
@@ -181,7 +191,18 @@ const Chat = () => {
         <div ref={endOfMessagesRef}></div>
       </div>
 
-      {/* Input */}
+      {messages?.byId?.[chatId]?.batchNum > 1 && showScrollButton && (
+        <button
+          onClick={() => {
+            endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+            setShowScrollButton(false)
+          }}
+          className="btn btn-circle btn-primary fixed bottom-20 right-5 shadow-lg left-1/2"
+        >
+          <ArrowDown className="w-5 h-5" />
+        </button>
+      )}
+
       <div className="border-base-300 sticky bottom-0 z-10">
         <div className="p-2 flex items-center gap-2 max-w-2xl mx-auto">
           <input
