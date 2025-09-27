@@ -71,11 +71,11 @@ const chatSlice = createSlice({
       if (!state.messages?.byId[chat]) {
         state.messages.byId[chat] = [];
       }
-      state.messages.byId[chat].push(msg);
+      state.messages.byId[chat]?.messages.push(msg);
     },
      updateMessage: (state, action) => {
       const { tempId, chat, messageId, status} = action.payload;
-      const chatMessages = state.messages.byId[chat];
+      const chatMessages = state.messages.byId[chat].messages;
       if (!chatMessages) return;
     
       const msgIndex = chatMessages.findIndex(
@@ -85,7 +85,7 @@ const chatSlice = createSlice({
       if (msgIndex !== -1) {
         const existingMsg = chatMessages[msgIndex];
         // Merge updates safely
-        state.messages.byId[chat][msgIndex] = {
+        state.messages.byId[chat].messages[msgIndex] = {
           ...existingMsg,
           ...action.payload,
           status: status || existingMsg.status,

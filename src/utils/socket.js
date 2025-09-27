@@ -6,8 +6,11 @@ export const getSocket = loggedInUserId => {
      if(!loggedInUserId) return console.log("Loggedin user id is required to connect")     
 
     if(!socket) {
-        socket = io(`${import.meta.env.VITE_API_URL}`, {
+        socket = io(`${import.meta.env.VITE_SOCKET_URL}`, {
+            path: "/socket.io",
+            transports: ["websocket"],
             autoConnect:false,
+            withCredentials: true,
             auth: { sender : loggedInUserId }
         })
     }else{

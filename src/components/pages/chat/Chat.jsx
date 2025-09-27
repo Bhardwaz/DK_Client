@@ -134,7 +134,7 @@ const Chat = () => {
               className="menu dropdown-content bg-base-200 rounded-box shadow-md mt-3 w-48"
             >
               <li>
-                <Link>View Profile</Link>
+                <Link to={`/profile/view/${targetUserId}`}>View Profile</Link>
               </li>
               <li>
                 <button>Mute Notifications</button>
