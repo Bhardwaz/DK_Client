@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0a;
+  --bg-2: #111111;
+  --surface: rgba(255,255,255,0.04);
+  --surface-hover: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.14);
+  --text: #ffffff;
+  --text-2: rgba(255,255,255,0.6);
+  --text-3: rgba(255,255,255,0.35);
+  --pink: #e84393;
+  --pink-dark: #c2185b;
+  --pink-glow: rgba(232,67,147,0.2);
+  --green: #4ade80;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 0; height: 0; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes swipeRight { to { transform: translateX(130%) rotate(22deg); opacity: 0; } }
+@keyframes swipeLeft  { to { transform: translateX(-130%) rotate(-22deg); opacity: 0; } }
+
+.fade-up     { animation: fadeUp 0.4s cubic-bezier(0.16,1,0.3,1) both; }
+.swipe-right { animation: swipeRight 0.35s ease forwards; }
+.swipe-left  { animation: swipeLeft  0.35s ease forwards; }
+
+.chip {
+  display: inline-flex; align-items: center;
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.02em;
+  background: rgba(255,255,255,0.06); color: var(--text-2);
+  border: 1px solid var(--border); white-space: nowrap;
+}
+.chip-pink {
+  background: rgba(232,67,147,0.1);
+  border-color: rgba(232,67,147,0.2);
+  color: var(--pink);
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-family: var(--font-sans); font-weight: 600; font-size: 13px;
+  border: none; border-radius: 100px; cursor: pointer;
+  transition: all 0.2s; letter-spacing: 0.01em; white-space: nowrap;
+}
+.btn-primary { background: linear-gradient(135deg, var(--pink), var(--pink-dark)); color: #fff; padding: 12px 22px; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--pink-glow); }
+.btn-ghost { background: var(--surface); border: 1px solid var(--border); color: var(--text-2); padding: 10px 18px; }
+.btn-ghost:hover { background: var(--surface-hover); color: var(--text); border-color: var(--border-hover); }
+.btn-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); color: var(--text-2); padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.btn-icon:hover { background: var(--surface-hover); color: var(--text); }
+
+.input {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); border-radius: 14px; padding: 13px 16px;
+  width: 100%; font-size: 14px; font-family: var(--font-sans);
+  outline: none; transition: border-color 0.2s;
+}
+.input::placeholder { color: var(--text-3); }
+.input:focus { border-color: rgba(232,67,147,0.5); }
+textarea.input { resize: none; line-height: 1.6; }
+select.input { cursor: pointer; }
+select.input option { background: #1a1a1a; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; }
+
+.nav-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 18px; border-radius: 10px; cursor: pointer;
+  color: var(--text-3); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  transition: color 0.2s; border: none; background: transparent;
+  font-family: var(--font-sans); text-decoration: none;
+}
+.nav-tab.active { color: var(--pink); }
+.nav-tab:hover:not(.active) { color: var(--text-2); }
+
+.badge {
+  position: absolute; top: -5px; right: -5px;
+  min-width: 16px; height: 16px; border-radius: 8px;
+  background: var(--pink); color: #fff; font-size: 9px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px; border: 1.5px solid var(--bg);
+}
+.online-dot {
+  position: absolute; bottom: -1px; right: -1px;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--green); border: 2px solid var(--bg);
+}
+
+details summary::-webkit-details-marker { display: none; }
