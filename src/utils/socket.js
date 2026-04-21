@@ -6,7 +6,7 @@ export const getSocket = loggedInUserId => {
      if(!loggedInUserId) return console.log("Loggedin user id is required to connect")     
 
     if(!socket) {
-        socket = io(`${import.meta.env.VITE_SOCKET_URL}`, {
+        socket = io(`https://api.datekarle.com`, {
             path: "/socket.io",
             transports: ["websocket"],
             autoConnect:false,
