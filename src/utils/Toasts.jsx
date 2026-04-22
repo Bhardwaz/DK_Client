@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { getRelativeTime } from "./utilityfn";
 
-export const showMessageToast = ({ content, firstName, lastName, photoUrl, createdAt }) => {
+export const ShowMessageToast = ({ content, firstName, lastName, photoUrl, createdAt }) => {
   const time = getRelativeTime(createdAt);
 
   toast.custom(
