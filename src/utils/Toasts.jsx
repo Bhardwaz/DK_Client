@@ -1,49 +1,50 @@
 import toast from "react-hot-toast";
 import { getRelativeTime } from "./utilityfn";
 
-export const ShowMessageToast = ({ content, firstName, lastName, photoUrl, createdAt }) => {
+export const showMessageToast = ({ content, firstName, lastName, photoUrl, createdAt }) => {
   const time = getRelativeTime(createdAt);
 
   toast.custom(
     (t) => (
       <div
         className={`${
-          t.visible ? "animate-custom-enter" : "animate-custom-leave"
-        } max-w-md w-full bg-base-100 shadow-lg rounded-xl pointer-events-auto flex border border-base-300`}
+          t.visible ? "animate-enter" : "animate-leave"
+        } max-w-md w-full bg-base-100 shadow-lg rounded-xl pointer-events-auto flex flex-row items-start border border-base-300`}
       >
         {/* Avatar */}
-        <div className="flex-shrink-0 p-3">
+        <div className="flex-shrink-0 p-3 pt-4">
           <img
-            className="h-12 w-12 rounded-full ring ring-primary ring-offset-2"
+            className="h-12 w-12 rounded-full ring ring-primary ring-offset-2 object-cover"
             src={photoUrl}
-            alt="connection"
+            alt={`${firstName} ${lastName}`}
           />
         </div>
 
         {/* Text Content */}
-        <div className="flex-1 p-3">
-          <div className="flex justify-between items-center">
-            <p className="text-sm font-bold text-primary">
-              {firstName + " " + lastName}
+        <div className="flex flex-col flex-1 py-3 pr-2 min-w-0">
+          <div className="flex justify-between items-center gap-2">
+            <p className="text-sm font-bold text-primary truncate">
+              {firstName} {lastName}
             </p>
-            <p className="text-xs text-base-content opacity-60">{time}</p>
+            <p className="text-xs text-base-content opacity-60 whitespace-nowrap">{time}</p>
           </div>
-          <p className="mt-1 text-sm text-base-content">{content}</p>
+          <p className="mt-1 text-sm text-base-content line-clamp-2">{content}</p>
         </div>
 
         {/* Close Button */}
-        <div className="flex items-center border-l border-base-300">
+        <div className="flex items-stretch border-l border-base-300 flex-shrink-0">
           <button
             onClick={() => toast.dismiss(t.id)}
-            className="btn btn-ghost btn-sm rounded-none"
+            className="btn btn-ghost btn-sm rounded-none rounded-r-xl h-full px-3"
           >
-            Close
+            ✕
           </button>
         </div>
       </div>
     ),
     {
-      position: "top-center", // DaisyUI-friendly position
+      duration: 5000,
+      position: "top-center",
     }
   );
 };
